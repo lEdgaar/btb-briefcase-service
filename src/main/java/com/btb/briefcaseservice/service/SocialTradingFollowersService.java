@@ -1,3 +1,15 @@
 package com.btb.briefcaseservice.service;
 
-public interface SocialTradingFollowersService {}
+import com.btb.briefcaseservice.entity.Briefcase;
+
+import java.util.List;
+
+public interface SocialTradingFollowersService {
+
+    List<Briefcase> showSocialTradingBriefcase();
+
+    void copySocialTradingBriefcase(Long sourceBriefcaseId, Long brokerId);
+
+    void deleteSocialTradingBriefcase(Long socialTradingBriefcaseId, Long brokerId);
+
+}
