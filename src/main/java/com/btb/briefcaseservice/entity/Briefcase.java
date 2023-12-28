@@ -1,7 +1,14 @@
 package com.btb.briefcaseservice.entity;
 
+import lombok.*;
+
 import java.util.Date;
 
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Briefcase extends BaseModel<Long> {
 
     private static final long serialVersionUID = 1L;
