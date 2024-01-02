@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.btb.briefcaseservice.persistence.mapper.FavoriteAssetsMapper">
+
+    <resultMap id="resultMap" type="com.btb.briefcaseservice.entity.FavoriteAssets">
+
+        <id property="id" column="ID" javaType="Long" jdbcType="BIGINT" />
+
+        <result property="userId" column="USER_ID" javaType="Long" jdbcType="BIGINT" />
+
+        <association property="assets" column="ASSET_ID" javaType="com.btb.briefcaseservice.entity.Assets"
+                     fetchType="lazy" select="com.btb.briefcaseservice.persistence.mapper.AssetsMapper.findById"/>
+
+    </resultMap>
+
+    <sql id="selectColumnNamesClause">
+        RES.ID,
+        RES.USER_ID,
+        RES.ASSET_ID
+    </sql>
+
+    <sql id="whereFilteredClause">
+        <if test="id != null">
+            AND RES.ID=#{id}
+        </if>
+        <if test="userId != null">
+            AND RES.USER_ID=#{userId}
+        </if>
+        <if test="assets != null and assets.id != null">
+            AND RES.ASSET_ID=#{assets.id}
+        </if>
+    </sql>
+
+    <sql id="insertColumnNamesClause">
+        USER_ID,
+        ASSET_ID
+    </sql>
+
+    <sql id="insertValuesClause">
+        #{userId},
+        #{assets.id}
+    </sql>
+
+    <sql id="updateSetClause">
+        USER_ID=#{userId},
+        ASSET_ID=#{assets.id}
+    </sql>
+
+    <select id="findById" resultMap="resultMap" parameterType="Long">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        FAVORITE_ASSETS
+        RES
+        WHERE
+        RES.ID=#{value}
+    </select>
+
+    <select id="findAll" resultMap="resultMap">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        FAVORITE_ASSETS
+        RES
+        ORDER BY
+        RES.ID ASC
+    </select>
+
+    <select id="findByFilter" resultMap="resultMap" parameterType="com.btb.briefcaseservice.entity.FavoriteAssets">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        FAVORITE_ASSETS
+        RES
+        WHERE 1=1
+        <include refid="whereFilteredClause" />
+        ORDER BY
+        RES.ID ASC
+    </select>
+
+    <insert id="save" parameterType="com.btb.briefcaseservice.entity.FavoriteAssets" useGeneratedKeys="true" keyColumn="ID" keyProperty="id">
+        INSERT INTO
+        FAVORITE_ASSETS
+        (
+        <include refid="insertColumnNamesClause" />
+        )
+        VALUES
+        (
+        <include refid="insertValuesClause" />
+        )
+    </insert>
+
+    <update id="update" parameterType="com.btb.briefcaseservice.entity.FavoriteAssets">
+        UPDATE
+        FAVORITE_ASSETS
+        SET
+        <include refid="updateSetClause" />
+        WHERE
+        ID=#{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM
+            FAVORITE_ASSETS
+        WHERE
+            ID=#{value}
+    </delete>
+
+</mapper>

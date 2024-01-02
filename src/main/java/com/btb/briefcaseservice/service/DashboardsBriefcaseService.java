@@ -1,14 +1,17 @@
 package com.btb.briefcaseservice.service;
 
-import com.btb.briefcaseservice.entity.Briefcase;
+import com.btb.briefcaseservice.dto.AddDashboardBriefcase;
+import com.btb.briefcaseservice.entity.DashboardsBriefcase;
+import com.btb.briefcaseservice.exception.BriefcaseException;
+import com.btb.briefcaseservice.exception.DBException;
+
+import java.util.List;
 
 public interface DashboardsBriefcaseService {
 
-    Briefcase getBriefcaseById(Long id);
+    List<DashboardsBriefcase> getBriefcaseDashboardsById(Long id) throws BriefcaseException;
 
-    void addDashboardBriefcase(Briefcase briefcase);
-
-    void updateDashboardBriefcase(Long briefcaseId);
+    void addDashboardBriefcase(AddDashboardBriefcase addDashboardBriefcase) throws BriefcaseException, DBException;
 
     void deleteDashboardBriefcase(Long briefcaseId);
 

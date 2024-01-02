@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.btb.briefcaseservice.persistence.mapper.DashboardsTypeMapper">
+
+    <cache />
+
+    <resultMap id="resultMap" type="com.btb.briefcaseservice.entity.DashboardsType">
+
+        <id property="id" column="ID" javaType="Long" jdbcType="BIGINT" />
+
+        <result property="name" column="NAME" javaType="String" jdbcType="VARCHAR" />
+
+        <result property="internalCode" column="INTERNAL_CODE" javaType="String" jdbcType="VARCHAR" />
+
+    </resultMap>
+
+    <sql id="selectColumnNamesClause">
+        RES.ID,
+        RES.NAME,
+        RES.INTERNAL_CODE
+    </sql>
+
+    <sql id="whereFilteredClause">
+        <if test="id != null">
+            AND RES.ID=#{id}
+        </if>
+        <if test="name != null">
+            AND RES.NAME=#{name}
+        </if>
+        <if test="internalCode != null">
+            AND RES.INTERNAL_CODE=#{internalCode}
+        </if>
+    </sql>
+
+    <sql id="insertColumnNamesClause">
+        NAME,
+        INTERNAL_CODE
+    </sql>
+
+    <sql id="insertValuesClause">
+        #{name},
+        #{internalCode}
+    </sql>
+
+    <sql id="updateSetClause">
+        NAME=#{name},
+        INTERNAL_CODE=#{internalCode}
+    </sql>
+
+    <select id="findById" resultMap="resultMap" parameterType="Long">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        DASHBOARDS_TYPE
+        RES
+        WHERE
+        RES.ID=#{value}
+    </select>
+
+    <select id="findAll" resultMap="resultMap" parameterType="Long" useCache="true" flushCache="false">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        DASHBOARDS_TYPE
+        RES
+        ORDER BY
+        RES.ID ASC
+    </select>
+
+    <select id="findByFilter" resultMap="resultMap" parameterType="com.btb.briefcaseservice.entity.DashboardsType">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        DASHBOARDS_TYPE
+        RES
+        WHERE 1=1
+        <include refid="whereFilteredClause" />
+        ORDER BY
+        RES.ID ASC
+    </select>
+
+    <insert id="save" parameterType="com.btb.briefcaseservice.entity.DashboardsType" useGeneratedKeys="true" keyColumn="ID" keyProperty="id" flushCache="true">
+        INSERT INTO
+        DASHBOARDS_TYPE
+        (
+        <include refid="insertColumnNamesClause" />
+        )
+        VALUES
+        (
+        <include refid="insertValuesClause" />
+        )
+    </insert>
+
+    <update id="update" parameterType="com.btb.briefcaseservice.entity.DashboardsType" flushCache="true">
+        UPDATE
+        DASHBOARDS_TYPE
+        SET
+        <include refid="updateSetClause" />
+        WHERE
+        ID=#{id}
+    </update>
+
+    <delete id="delete" parameterType="Long" flushCache="true">
+        DELETE FROM
+            DASHBOARDS_TYPE
+        WHERE
+            ID=#{value}
+    </delete>
+
+</mapper>

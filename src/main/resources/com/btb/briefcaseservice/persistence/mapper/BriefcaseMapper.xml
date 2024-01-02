@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.btb.briefcaseservice.persistence.mapper.BriefcaseMapper">
+
+    <resultMap id="resultMap" type="com.btb.briefcaseservice.entity.Briefcase">
+
+        <id property="id" column="ID" javaType="Long" jdbcType="BIGINT" />
+
+        <result property="name" column="NAME" javaType="String" jdbcType="VARCHAR" />
+
+        <result property="userId" column="USER_ID" javaType="Long" jdbcType="BIGINT" />
+
+        <result property="createdAt" column="CREATED_AT" javaType="Date" jdbcType="TIMESTAMP" />
+
+        <result property="isActive" column="IS_ACTIVE" javaType="Boolean" jdbcType="BIT" />
+
+        <result property="enableSocialTrading" column="ENABLE_SOCIAL_TRADING" javaType="Boolean" jdbcType="BIT" />
+
+    </resultMap>
+
+    <sql id="selectColumnNamesClause">
+        RES.ID,
+        RES.NAME,
+        RES.USER_ID,
+        RES.CREATED_AT,
+        RES.IS_ACTIVE,
+        RES.ENABLE_SOCIAL_TRADING
+    </sql>
+
+    <sql id="whereFilteredClause">
+        <if test="id != null">
+            AND RES.ID=#{id}
+        </if>
+        <if test="name != null">
+            AND RES.NAME=#{name}
+        </if>
+        <if test="userId != null">
+            AND RES.USER_ID=#{userId}
+        </if>
+        <if test="createdAt != null">
+            AND RES.CREATED_AT=#{createdAt}
+        </if>
+        <if test="isActive != null">
+            AND RES.IS_ACTIVE=#{isActive}
+        </if>
+        <if test="enableSocialTrading != null">
+            AND RES.ENABLE_SOCIAL_TRADING=#{enableSocialTrading}
+        </if>
+    </sql>
+
+    <sql id="insertColumnNamesClause">
+        NAME,
+        USER_ID,
+        CREATED_AT,
+        IS_ACTIVE,
+        ENABLE_SOCIAL_TRADING
+    </sql>
+
+    <sql id="insertValuesClause">
+        #{name},
+        #{userId},
+        #{createdAt},
+        #{isActive},
+        #{enableSocialTrading}
+    </sql>
+
+    <sql id="updateSetClause">
+        NAME=#{name},
+        USER_ID=#{userId},
+        CREATED_AT=#{createdAt},
+        IS_ACTIVE=#{isActive},
+        ENABLE_SOCIAL_TRADING=#{enableSocialTrading}
+    </sql>
+
+    <select id="findById" resultMap="resultMap" parameterType="Long">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        BRIEFCASE
+        RES
+        WHERE
+        RES.ID=#{value}
+    </select>
+
+    <select id="findAll" resultMap="resultMap">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        BRIEFCASE
+        RES
+        ORDER BY
+        RES.ID ASC
+    </select>
+
+    <select id="findByFilter" resultMap="resultMap" parameterType="com.btb.briefcaseservice.entity.Briefcase">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        BRIEFCASE
+        RES
+        WHERE 1=1
+        <include refid="whereFilteredClause" />
+        ORDER BY
+        RES.ID ASC
+    </select>
+
+    <insert id="save" parameterType="com.btb.briefcaseservice.entity.Briefcase" useGeneratedKeys="true" keyColumn="ID" keyProperty="id">
+        INSERT INTO
+        BRIEFCASE
+        (
+        <include refid="insertColumnNamesClause" />
+        )
+        VALUES
+        (
+        <include refid="insertValuesClause" />
+        )
+    </insert>
+
+    <update id="update" parameterType="com.btb.briefcaseservice.entity.Briefcase">
+        UPDATE
+        BRIEFCASE
+        SET
+        <include refid="updateSetClause" />
+        WHERE
+        ID=#{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM
+            BRIEFCASE
+        WHERE
+            ID=#{value}
+    </delete>
+
+</mapper>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.btb.briefcaseservice.persistence.mapper.DashboardsBriefcaseMapper">
+
+    <resultMap id="resultMap" type="com.btb.briefcaseservice.entity.DashboardsBriefcase">
+
+        <id property="id" column="ID" javaType="Long" jdbcType="BIGINT" />
+
+        <result property="filterColumn" column="FILTER_COLUMN" javaType="String" jdbcType="VARCHAR" />
+
+        <result property="order" column="ORDER" javaType="String" jdbcType="VARCHAR" />
+
+        <association property="dashboardsType" column="DASHBOARDS_TYPE_ID" javaType="com.btb.briefcaseservice.entity.DashboardsType"
+                     fetchType="lazy" select="com.btb.briefcaseservice.persistence.mapper.DashboardsTypeMapper.findById"/>
+
+        <association property="briefcase" column="BRIEFCASE_ID" javaType="com.btb.briefcaseservice.entity.Briefcase"
+                     fetchType="lazy" select="com.btb.briefcaseservice.persistence.mapper.BriefcaseMapper.findById"/>
+
+    </resultMap>
+
+    <sql id="selectColumnNamesClause">
+        RES.ID,
+        RES.DASHBOARDS_TYPE_ID,
+        RES.BRIEFCASE_ID,
+        RES.FILTER_COLUMN,
+        RES.ORDER
+    </sql>
+
+    <sql id="whereFilteredClause">
+        <if test="id != null">
+            AND RES.ID=#{id}
+        </if>
+        <if test="dashboardsType != null and dashboardsType.id != null">
+            AND RES.DASHBOARDS_TYPE_ID=#{dashboardsType.id}
+        </if>
+        <if test="briefcase != null and briefcase.id != null">
+            AND RES.BRIEFCASE_ID=#{briefcase.id}
+        </if>
+        <if test="filterColumn != null">
+            AND RES.FILTER_COLUMN=#{filterColumn}
+        </if>
+        <if test="order != null">
+            AND RES.ORDER=#{order}
+        </if>
+    </sql>
+
+    <sql id="insertColumnNamesClause">
+        DASHBOARDS_TYPE_ID,
+        BRIEFCASE_ID,
+        FILTER_COLUMN,
+        ORDER
+    </sql>
+
+    <sql id="insertValuesClause">
+        #{dashboardsType.id},
+        #{briefcase.id},
+        #{filterColumn},
+        #{order}
+    </sql>
+
+    <sql id="updateSetClause">
+        DASHBOARDS_TYPE_ID=#{dashboardsType.id},
+        BRIEFCASE_ID=#{briefcase.id},
+        FILTER_COLUMN=#{filterColumn},
+        ORDER=#{order}
+    </sql>
+
+    <select id="findById" resultMap="resultMap" parameterType="Long">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        DASHBOARDS_BRIEFCASE
+        RES
+        WHERE
+        RES.ID=#{value}
+    </select>
+
+    <select id="findAll" resultMap="resultMap">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        DASHBOARDS_BRIEFCASE
+        RES
+        ORDER BY
+        RES.ID ASC
+    </select>
+
+    <select id="findByFilter" resultMap="resultMap" parameterType="com.btb.briefcaseservice.entity.DashboardsBriefcase">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        DASHBOARDS_BRIEFCASE
+        RES
+        WHERE 1=1
+        <include refid="whereFilteredClause" />
+        ORDER BY
+        RES.ID ASC
+    </select>
+
+    <insert id="save" parameterType="com.btb.briefcaseservice.entity.DashboardsBriefcase" useGeneratedKeys="true" keyColumn="ID" keyProperty="id">
+        INSERT INTO
+        DASHBOARDS_BRIEFCASE
+        (
+        <include refid="insertColumnNamesClause" />
+        )
+        VALUES
+        (
+        <include refid="insertValuesClause" />
+        )
+    </insert>
+
+    <update id="update" parameterType="com.btb.briefcaseservice.entity.DashboardsBriefcase">
+        UPDATE
+        DASHBOARDS_BRIEFCASE
+        SET
+        <include refid="updateSetClause" />
+        WHERE
+        ID=#{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM
+            DASHBOARDS_BRIEFCASE
+        WHERE
+            ID=#{value}
+    </delete>
+
+</mapper>

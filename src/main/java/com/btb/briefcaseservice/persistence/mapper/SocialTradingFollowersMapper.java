@@ -1,3 +1,5 @@
 package com.btb.briefcaseservice.persistence.mapper;
 
-public interface SocialTradingFollowersMapper {}
+import com.btb.briefcaseservice.entity.SocialTradingFollowers;
+
+public interface SocialTradingFollowersMapper extends CommonMapper<SocialTradingFollowers, Long>{}

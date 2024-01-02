@@ -1,3 +1,5 @@
 package com.btb.briefcaseservice.persistence.mapper;
 
-public interface DashboardsTypeMapper {}
+import com.btb.briefcaseservice.entity.DashboardsType;
+
+public interface DashboardsTypeMapper extends CommonMapper<DashboardsType, Long>{}

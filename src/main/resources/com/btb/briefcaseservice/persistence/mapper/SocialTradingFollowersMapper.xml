@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.btb.briefcaseservice.persistence.mapper.SocialTradingFollowersMapper">
+
+    <resultMap id="resultMap" type="com.btb.briefcaseservice.entity.SocialTradingFollowers">
+
+        <id property="id" column="ID" javaType="Long" jdbcType="BIGINT" />
+
+        <result property="userId" column="USER_ID" javaType="Long" jdbcType="BIGINT" />
+
+        <result property="followerId" column="FOLLOWER_ID" javaType="Long" jdbcType="BIGINT" />
+
+        <result property="timeAt" column="TIME_AT" javaType="Date" jdbcType="TIMESTAMP" />
+
+        <association property="briefcase" column="BRIEFCASE_ID" javaType="com.btb.briefcaseservice.entity.Briefcase"
+                     fetchType="lazy" select="com.btb.briefcaseservice.persistence.mapper.BriefcaseMapper.findById"/>
+
+    </resultMap>
+
+    <sql id="selectColumnNamesClause">
+        RES.ID,
+        RES.USER_ID,
+        RES.FOLLOWER_ID,
+        RES.BRIEFCASE_ID,
+        RES.TIME_AT
+    </sql>
+
+    <sql id="whereFilteredClause">
+        <if test="id != null">
+            AND RES.ID=#{id}
+        </if>
+        <if test="userId != null">
+            AND RES.USER_ID=#{userId}
+        </if>
+        <if test="followerId != null">
+            AND RES.FOLLOWER_ID=#{followerId}
+        </if>
+        <if test="briefcase != null and briefcase.id != null">
+            AND RES.BRIEFCASE_ID=#{briefcase.id}
+        </if>
+    </sql>
+
+    <sql id="insertColumnNamesClause">
+        USER_ID,
+        FOLLOWER_ID,
+        BRIEFCASE_ID,
+        TIME_AT
+    </sql>
+
+    <sql id="insertValuesClause">
+        #{userId},
+        #{followerId},
+        #{briefcase.id},
+        #{timeAt}
+    </sql>
+
+    <sql id="updateSetClause">
+        USER_ID=#{userId},
+        FOLLOWER_ID=#{followerId},
+        BRIEFCASE_ID=#{briefcase.id},
+        TIME_AT=#{timeAt}
+    </sql>
+
+    <select id="findById" resultMap="resultMap" parameterType="Long">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        SOCIAL_TRADING_FOLLOWERS
+        RES
+        WHERE
+        RES.ID=#{value}
+    </select>
+
+    <select id="findAll" resultMap="resultMap">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        SOCIAL_TRADING_FOLLOWERS
+        RES
+        ORDER BY
+        RES.ID ASC
+    </select>
+
+    <select id="findByFilter" resultMap="resultMap" parameterType="com.btb.briefcaseservice.entity.SocialTradingFollowers">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        SOCIAL_TRADING_FOLLOWERS
+        RES
+        WHERE 1=1
+        <include refid="whereFilteredClause" />
+        ORDER BY
+        RES.ID ASC
+    </select>
+
+    <insert id="save" parameterType="com.btb.briefcaseservice.entity.SocialTradingFollowers" useGeneratedKeys="true" keyColumn="ID" keyProperty="id">
+        INSERT INTO
+        SOCIAL_TRADING_FOLLOWERS
+        (
+        <include refid="insertColumnNamesClause" />
+        )
+        VALUES
+        (
+        <include refid="insertValuesClause" />
+        )
+    </insert>
+
+    <update id="update" parameterType="com.btb.briefcaseservice.entity.SocialTradingFollowers">
+        UPDATE
+        SOCIAL_TRADING_FOLLOWERS
+        SET
+        <include refid="updateSetClause" />
+        WHERE
+        ID=#{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM
+            SOCIAL_TRADING_FOLLOWERS
+        WHERE
+            ID=#{value}
+    </delete>
+
+</mapper>

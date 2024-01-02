@@ -1,13 +1,11 @@
 package com.btb.briefcaseservice.controller;
 
 import com.btb.briefcaseservice.entity.Briefcase;
+import com.btb.briefcaseservice.exception.DBException;
 import com.btb.briefcaseservice.service.SocialTradingFollowersService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,7 +30,7 @@ public class SocialTradingController {
     }
 
     @PostMapping("/copy/{sourceBriefcaseId}/{brokerId}")
-    public void copySocialTradingBriefcase(Long sourceBriefcaseId, Long brokerId) {
+    public void copySocialTradingBriefcase(@PathVariable("sourceBriefcaseId") Long sourceBriefcaseId, @PathVariable("brokerId") Long brokerId) throws DBException {
         log.info("SocialTrading: Copy SocialTradingBriefcase from {} to {}", sourceBriefcaseId, brokerId);
 
         log.info("Event: Copy SocialTradingBriefcase from {} to {}", sourceBriefcaseId, brokerId);
@@ -40,11 +38,11 @@ public class SocialTradingController {
     }
 
     @PostMapping("/delete/{sourceBriefcaseId}/{brokerId}")
-    public void deleteSocialTradingBriefcase(Long socialTradingBriefcaseId, Long brokerId) {
-        log.info("SocialTrading: Delete SocialTradingBriefcase from {} to {}", socialTradingBriefcaseId, brokerId);
+    public void deleteSocialTradingBriefcase(@PathVariable("sourceBriefcaseId") Long sourceBriefcaseId, @PathVariable("brokerId") Long brokerId) {
+        log.info("SocialTrading: Delete SocialTradingBriefcase from {} to {}", sourceBriefcaseId, brokerId);
 
-        log.info("Event: Delete SocialTradingBriefcase from {} to {}", socialTradingBriefcaseId, brokerId);
-        socialTradingFollowersService.deleteSocialTradingBriefcase(socialTradingBriefcaseId, brokerId);
+        log.info("Event: Delete SocialTradingBriefcase from {} to {}", sourceBriefcaseId, brokerId);
+        socialTradingFollowersService.deleteSocialTradingBriefcase(sourceBriefcaseId, brokerId);
     }
 
 }

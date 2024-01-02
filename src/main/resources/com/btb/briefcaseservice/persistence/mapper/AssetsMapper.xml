@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.btb.briefcaseservice.persistence.mapper.AssetsMapper">
+
+    <resultMap id="resultMap" type="com.btb.briefcaseservice.entity.Assets">
+
+        <id property="id" column="ID" javaType="Long" jdbcType="BIGINT" />
+
+        <result property="name" column="NAME" javaType="String" jdbcType="VARCHAR" />
+
+        <result property="marketCode" column="MARKET_CODE" javaType="String" jdbcType="VARCHAR" />
+
+        <result property="dataSource" column="DATA_SOURCE" javaType="String" jdbcType="VARCHAR" />
+
+        <result property="isEnabled" column="IS_ENABLED" javaType="Boolean" jdbcType="BIT" />
+
+        <association property="assetsGroups" column="assetsGroups" javaType="com.btb.briefcaseservice.entity.AssetsGroups"
+                     fetchType="lazy" select="com.btb.briefcaseservice.persistence.mapper.AssetsGroupsMapper.findById"/>
+
+    </resultMap>
+
+    <sql id="selectColumnNamesClause">
+        RES.ID,
+        RES.NAME,
+        RES.MARKET_CODE,
+        RES.DATA_SOURCE,
+        RES.ASSET_GROUPS_ID,
+        RES.IS_ENABLED
+    </sql>
+
+    <sql id="whereFilteredClause">
+        <if test="id != null">
+            AND RES.ID=#{id}
+        </if>
+        <if test="name != null">
+            AND RES.NAME=#{name}
+        </if>
+        <if test="marketCode != null">
+            AND RES.MARKET_CODE=#{marketCode}
+        </if>
+        <if test="dataSource != null">
+            AND RES.DATA_SOURCE=#{dataSource}
+        </if>
+        <if test="assetsGroups != null and assetsGroups.id != null">
+            AND RES.ASSET_GROUPS_ID=#{assetsGroups.id}
+        </if>
+        <if test="isEnabled != null">
+            AND RES.IS_ENABLED=#{isEnabled}
+        </if>
+    </sql>
+
+    <sql id="insertColumnNamesClause">
+        NAME,
+        MARKET_CODE,
+        DATA_SOURCE,
+        ASSET_GROUPS_ID,
+        IS_ENABLED
+    </sql>
+
+    <sql id="insertValuesClause">
+        #{name},
+        #{marketCode},
+        #{dataSource},
+        #{assetsGroups.id},
+        #{isEnabled}
+    </sql>
+
+    <sql id="updateSetClause">
+        NAME=#{name},
+        MARKET_CODE=#{marketCode},
+        DATA_SOURCE=#{dataSource},
+        ASSET_GROUPS_ID=#{assetsGroups.id},
+        IS_ENABLED=#{isEnabled}
+    </sql>
+
+    <select id="findById" resultMap="resultMap" parameterType="Long">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        ASSETS
+        RES
+        WHERE
+        RES.ID=#{value}
+    </select>
+
+    <select id="findAll" resultMap="resultMap">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        ASSETS
+        RES
+        ORDER BY
+        RES.ID ASC
+    </select>
+
+    <select id="findByFilter" resultMap="resultMap" parameterType="com.btb.briefcaseservice.entity.Assets">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        ASSETS
+        RES
+        WHERE 1=1
+        <include refid="whereFilteredClause" />
+        ORDER BY
+        RES.ID ASC
+    </select>
+
+    <insert id="save" parameterType="com.btb.briefcaseservice.entity.Assets" useGeneratedKeys="true" keyColumn="ID" keyProperty="id">
+        INSERT INTO
+        ASSETS
+        (
+        <include refid="insertColumnNamesClause" />
+        )
+        VALUES
+        (
+        <include refid="insertValuesClause" />
+        )
+    </insert>
+
+    <update id="update" parameterType="com.btb.briefcaseservice.entity.Assets">
+        UPDATE
+        ASSETS
+        SET
+        <include refid="updateSetClause" />
+        WHERE
+        ID=#{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM
+            ASSETS
+        WHERE
+            ID=#{value}
+    </delete>
+
+</mapper>

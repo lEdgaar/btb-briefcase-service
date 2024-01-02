@@ -2,6 +2,8 @@ package com.btb.briefcaseservice.controller;
 
 import com.btb.briefcaseservice.dto.AddBriefcaseDTO;
 import com.btb.briefcaseservice.dto.UpdateBriefcaseDTO;
+import com.btb.briefcaseservice.exception.BriefcaseException;
+import com.btb.briefcaseservice.exception.DBException;
 import com.btb.briefcaseservice.service.BriefcaseService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ public class BriefcaseController {
     }
 
     @PostMapping("/")
-    public void addBriefcase(@RequestBody AddBriefcaseDTO addBriefcaseDTO) {
+    public void addBriefcase(@RequestBody AddBriefcaseDTO addBriefcaseDTO) throws DBException {
         log.info("Briefcase: Add Briefcase");
 
         log.info("Event: Add Briefcase");
@@ -28,15 +30,15 @@ public class BriefcaseController {
     }
 
     @PostMapping("/update/{briefcaseId}")
-    public void updateBriefcase(@PathVariable("briefcaseId") Long briefcaseId, @RequestBody UpdateBriefcaseDTO updateBriefcaseDTO) {
+    public void updateBriefcase(@PathVariable("briefcaseId") Long briefcaseId, @RequestBody UpdateBriefcaseDTO updateBriefcaseDTO) throws DBException {
         log.info("Briefcase: Update Briefcase");
 
         log.info("Event: Update Briefcase");
-        briefcaseService.updateBriefcase(updateBriefcaseDTO);
+        briefcaseService.updateBriefcase(briefcaseId, updateBriefcaseDTO);
     }
 
     @PostMapping("/delete/{briefcaseId}")
-    public void deleteBriefcase(@PathVariable("briefcaseId") Long briefcaseId) {
+    public void deleteBriefcase(@PathVariable("briefcaseId") Long briefcaseId) throws DBException {
         log.info("Briefcase: Delete Briefcase");
 
         log.info("Event: Delete Briefcase");
@@ -44,26 +46,18 @@ public class BriefcaseController {
     }
 
     @GetMapping("/user/{userId}")
-    public void getBriefcaseListByUser(@PathVariable("userId") Long userId) {
+    public void getBriefcaseListByUser(@PathVariable("userId") Long userId) throws BriefcaseException {
         log.info("Briefcase: Get BriefcaseListByUser");
 
         log.info("Event: Get BriefcaseListByUser");
         briefcaseService.getBriefcaseById(userId);
     }
 
-    @GetMapping("/risk/{briefcaseId}")
-    public void getRiskManagementTool(@PathVariable("briefcaseId") Long briefcaseId) {
-        log.info("Briefcase: Get RiskManagementTool");
-
-        log.info("Event: Get RiskManagementTool");
-        briefcaseService.getRiskManagementTool(briefcaseId);
-    }
-
     @GetMapping("/taxes/{briefcaseId}")
-    public void getTaxes(@PathVariable("briefcaseId") Long briefcaseId) {
+    public Double getTaxes(@PathVariable("briefcaseId") Long briefcaseId) {
         log.info("Briefcase: Get Taxes");
 
         log.info("Event: Get Taxes");
-        briefcaseService.getTaxes(briefcaseId);
+        return briefcaseService.getTaxes(briefcaseId);
     }
 }

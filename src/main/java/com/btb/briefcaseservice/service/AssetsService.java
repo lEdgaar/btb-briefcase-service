@@ -3,6 +3,9 @@ package com.btb.briefcaseservice.service;
 import com.btb.briefcaseservice.dto.BuyAssetDTO;
 import com.btb.briefcaseservice.dto.SellAssetDTO;
 import com.btb.briefcaseservice.entity.Assets;
+import com.btb.briefcaseservice.exception.AssetsException;
+import com.btb.briefcaseservice.exception.BriefcaseException;
+import com.btb.briefcaseservice.exception.DBException;
 
 import java.util.List;
 
@@ -10,24 +13,24 @@ public interface AssetsService {
 
     List<Assets> getAsset();
 
-    void getAssetByCategory(Long categoryId);
+    List<Assets> getAssetByCategory(Long categoryId);
 
-    void getAssetByName(String assetName);
+    List<Assets> getAssetByName(String assetName);
 
-    void followAsset(Long assetId);
+    Assets getAssetById(Long assetId) throws AssetsException;
 
-    void unfollowAsset(Long assetId);
+    void followAsset(Long assetId, Long userId) throws DBException, AssetsException;
 
-    void getFollowedAssetList(Long userId);
+    void unfollowAsset(Long assetId, Long userId) throws AssetsException;
 
-    void getAssetFeeling(Long assetId);
+    List<Assets> getFollowedAssetList(Long userId);
 
-    void buyAsset(BuyAssetDTO buyAssetDTO);
+    void buyAsset(BuyAssetDTO buyAssetDTO) throws AssetsException, DBException, BriefcaseException;
 
-    void sellAsset(SellAssetDTO sellAssetDTO);
+    void sellAsset(SellAssetDTO sellAssetDTO) throws AssetsException, DBException, BriefcaseException;
 
-    void buyAssetSandbox(BuyAssetDTO buyAssetDTO);
+    void buyAssetSandbox(BuyAssetDTO buyAssetDTO) throws AssetsException, DBException;
 
-    void sellAssetSandbox(SellAssetDTO sellAssetDTO);
+    void sellAssetSandbox(SellAssetDTO sellAssetDTO) throws AssetsException, DBException;
 
 }

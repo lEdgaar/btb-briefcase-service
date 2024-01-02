@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.btb.briefcaseservice.persistence.mapper.TransactionMapper">
+
+    <resultMap id="resultMap" type="com.btb.briefcaseservice.entity.Transaction">
+
+        <id property="id" column="ID" javaType="Long" jdbcType="BIGINT" />
+
+        <result property="createdAt" column="CREATED_AT" javaType="Date" jdbcType="TIMESTAMP" />
+
+        <result property="transactionType" column="TRANSACTION_TYPE" javaType="long" jdbcType="BIGINT" />
+
+        <result property="quantity" column="QUANTITY" javaType="long" jdbcType="BIGINT" />
+
+        <result property="priceUnit" column="PRICE_UNIT" javaType="double" jdbcType="DOUBLE" />
+
+        <result property="user" column="USER_ID" javaType="long" jdbcType="BIGINT" />
+
+        <result property="isSandbox" column="IS_SANDBOX" javaType="boolean" jdbcType="BOOLEAN" />
+
+        <association property="assets" column="ASSET_ID" javaType="com.btb.briefcaseservice.entity.Assets"
+                     fetchType="lazy" select="com.btb.briefcaseservice.persistence.mapper.AssetsMapper.findById"/>
+
+        <association property="briefcase" column="BRIEFCASE_ID" javaType="com.btb.briefcaseservice.entity.Briefcase"
+                     fetchType="lazy" select="com.btb.briefcaseservice.persistence.mapper.BriefcaseMapper.findById"/>
+
+    </resultMap>
+
+    <sql id="selectColumnNamesClause">
+        RES.ID,
+        RES.CREATED_AT,
+        RES.TRANSACTION_TYPE,
+        RES.QUANTITY,
+        RES.ASSET_ID,
+        RES.PRICE_UNIT,
+        RES.USER_ID,
+        RES.IS_SANDBOX,
+        RES.BRIEFCASE_ID
+    </sql>
+
+    <sql id="whereFilteredClause">
+        <if test="id != null">
+            AND RES.ID=#{id}
+        </if>
+        <if test="createdAt != null">
+            AND RES.CREATED_AT=#{createdAt}
+        </if>
+        <if test="transactionType != null">
+            AND RES.TRANSACTION_TYPE=#{transactionType}
+        </if>
+        <if test="quantity != null">
+            AND RES.QUANTITY=#{quantity}
+        </if>
+        <if test="asset != null and asset.id != null">
+            AND RES.ASSET_ID=#{asset.id}
+        </if>
+        <if test="priceUnit != null">
+            AND RES.PRICE_UNIT=#{priceUnit}
+        </if>
+        <if test="user != null">
+            AND RES.USER_ID=#{user}
+        </if>
+        <if test="isSandbox != null">
+            AND RES.IS_SANDBOX=#{isSandbox}
+        </if>
+        <if test="briefcase != null and briefcase.id != null">
+            AND RES.BRIEFCASE_ID=#{briefcase.id}
+        </if>
+    </sql>
+
+    <sql id="insertColumnNamesClause">
+        CREATED_AT,
+        TRANSACTION_TYPE,
+        QUANTITY,
+        ASSET_ID,
+        PRICE_UNIT,
+        USER_ID,
+        IS_SANDBOX,
+        BRIEFCASE_ID
+    </sql>
+
+    <sql id="insertValuesClause">
+        #{createdAt},
+        #{transactionType},
+        #{quantity},
+        #{asset.id},
+        #{priceUnit},
+        #{user},
+        #{isSandbox},
+        #{briefcase.id}
+    </sql>
+
+    <sql id="updateSetClause">
+        CREATED_AT=#{createdAt},
+        TRANSACTION_TYPE=#{transactionType},
+        QUANTITY=#{quantity},
+        ASSET_ID=#{asset.id},
+        PRICE_UNIT=#{priceUnit},
+        USER_ID=#{user},
+        IS_SANDBOX=#{isSandbox},
+        BRIEFCASE_ID=#{briefcase.id}
+    </sql>
+
+    <select id="findById" resultMap="resultMap" parameterType="Long">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        TRANSACTION
+        RES
+        WHERE
+        RES.ID=#{value}
+    </select>
+
+    <select id="findAll" resultMap="resultMap">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        TRANSACTION
+        RES
+        ORDER BY
+        RES.ID ASC
+    </select>
+
+    <select id="findByFilter" resultMap="resultMap" parameterType="com.btb.briefcaseservice.entity.Transaction">
+        SELECT
+        <include refid="selectColumnNamesClause" />
+        FROM
+        TRANSACTION
+        RES
+        WHERE 1=1
+        <include refid="whereFilteredClause" />
+        ORDER BY
+        RES.ID ASC
+    </select>
+
+    <insert id="save" parameterType="com.btb.briefcaseservice.entity.Transaction" useGeneratedKeys="true" keyColumn="ID" keyProperty="id">
+        INSERT INTO
+        TRANSACTION
+        (
+        <include refid="insertColumnNamesClause" />
+        )
+        VALUES
+        (
+        <include refid="insertValuesClause" />
+        )
+    </insert>
+
+    <update id="update" parameterType="com.btb.briefcaseservice.entity.Transaction">
+        UPDATE
+        TRANSACTION
+        SET
+        <include refid="updateSetClause" />
+        WHERE
+        ID=#{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM
+            TRANSACTION
+        WHERE
+            ID=#{value}
+    </delete>
+
+</mapper>

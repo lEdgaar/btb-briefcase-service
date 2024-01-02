@@ -9,10 +9,12 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateBriefcaseDTO {
+public class AddDashboardBriefcase {
 
-    private String name;
+    private Long briefcaseId;
 
-    private Boolean enableSocialTrading;
+    private String filterColumn;
+
+    private String order;
 
 }
