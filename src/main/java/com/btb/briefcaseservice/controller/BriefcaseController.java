@@ -2,12 +2,15 @@ package com.btb.briefcaseservice.controller;
 
 import com.btb.briefcaseservice.dto.AddBriefcaseDTO;
 import com.btb.briefcaseservice.dto.UpdateBriefcaseDTO;
+import com.btb.briefcaseservice.entity.Briefcase;
 import com.btb.briefcaseservice.exception.BriefcaseException;
 import com.btb.briefcaseservice.exception.DBException;
 import com.btb.briefcaseservice.service.BriefcaseService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Log4j2
 @RestController
@@ -46,11 +49,19 @@ public class BriefcaseController {
     }
 
     @GetMapping("/user/{userId}")
-    public void getBriefcaseListByUser(@PathVariable("userId") Long userId) throws BriefcaseException {
+    public List<Briefcase> getBriefcaseListByUser(@PathVariable("userId") Long userId) throws BriefcaseException {
         log.info("Briefcase: Get BriefcaseListByUser");
 
         log.info("Event: Get BriefcaseListByUser");
-        briefcaseService.getBriefcaseById(userId);
+        return briefcaseService.getBriefcaseListByUserId(userId);
+    }
+
+    @GetMapping("/{briefcaseId}")
+    public Briefcase getBriefcaseById(@PathVariable("briefcaseId") Long briefcaseId) throws BriefcaseException {
+        log.info("Briefcase: Get BriefcaseListByUser");
+
+        log.info("Event: Get BriefcaseListByUser");
+        return briefcaseService.getBriefcaseById(briefcaseId);
     }
 
     @GetMapping("/taxes/{briefcaseId}")

@@ -34,11 +34,11 @@ public class AssetController {
     }
 
     @GetMapping("/{assetId}")
-    public List<Assets> getAssetById(@PathVariable("assetId") Long assetId) {
+    public Assets getAssetById(@PathVariable("assetId") Long assetId) throws AssetsException {
         log.info("Asset: Get Asset by id {}", assetId);
 
         log.info("Event: Get Assetby id {}", assetId);
-        return assetsService.getAsset();
+        return assetsService.getAssetById(assetId);
     }
 
     @GetMapping("/category/{categoryId}")

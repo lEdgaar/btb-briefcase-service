@@ -75,6 +75,19 @@ public class BriefcaseServiceImpl implements BriefcaseService {
     }
 
     @Override
+    public List<Briefcase> getBriefcaseListByUserId(Long id) {
+        log.info("Getting briefcase: {}", id);
+
+        Briefcase briefcase = new Briefcase();
+        briefcase.setUserId(id);
+
+        List<Briefcase> briefcaseList = briefcaseMapper.findByFilter(briefcase);
+
+        log.info("Event: Get briefcase");
+        return briefcaseList;
+    }
+
+    @Override
     public Briefcase getBriefcaseById(Long id) throws BriefcaseException {
         log.info("Getting briefcase: {}", id);
 

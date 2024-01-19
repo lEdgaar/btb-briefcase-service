@@ -7,6 +7,8 @@ import com.btb.briefcaseservice.exception.BriefcaseException;
 import com.btb.briefcaseservice.exception.DBException;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
+
 public interface BriefcaseService {
 
     void addBriefcase(AddBriefcaseDTO addBriefcaseDTO) throws DBException;
@@ -14,6 +16,8 @@ public interface BriefcaseService {
     void updateBriefcase(Long briefcaseId, UpdateBriefcaseDTO updateBriefcaseDTO) throws DBException;
 
     void deleteBriefcase(Long briefcaseId) throws DBException;
+
+    List<Briefcase> getBriefcaseListByUserId(Long id);
 
     Briefcase getBriefcaseById(Long id) throws BriefcaseException;
 
